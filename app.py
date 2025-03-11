@@ -4,18 +4,19 @@ from HKBU_ChatGPT import HKBU_ChatGPT
 import configparser
 import logging
 import redis
+import os
 
 global redis1
 def main():
     # Load token and create an Updater for the bot
     config = configparser.ConfigParser()
     config.read('config.ini')
-    updater = Updater(token=(config['TELEGRAM']['ACCESS_TOKEN']), use_context=True)
+    updater = Updater(token=(os.environ['TELE_ACCESS_TOKEN']), use_context=True)
     dispatcher = updater.dispatcher
     global redis1
-    redis1 = redis.Redis(host=(config['REDIS']['HOST'])
-                         , port=(config['REDIS']['REDIS_PORT'])
-                         , password=(config['REDIS']['PASSWORD'])
+    redis1 = redis.Redis(host=(os.environ['REDIS_HOST'])
+                         , port=(os.environ['REDIS_PORT'])
+                         , password=(os.environ['REDIS_PASSWORD'])
                          , decode_responses=(config['REDIS']['DECODE_RESPONSE'])
                          , username=(config['REDIS']['USER_NAME']))
     global chatgpt

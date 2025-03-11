@@ -1,5 +1,6 @@
 import configparser
 import requests
+import os
 
 class HKBU_ChatGPT():
     def __init__(self,config_='config.ini'):
@@ -11,12 +12,12 @@ class HKBU_ChatGPT():
 
     def submit(self,message):
         conversation = [{"role": "user", "content": message}]
-        url = ((self.config["LLM_AI"]["BASIC_URL"])
+        url = ((os.environ['LLM_BASIC_URL'])
                + "/deployments/" + (self.config["LLM_AI"]["MODEL_NAME"])
                + "/chat/completions/?api-version="
                + (self.config["LLM_AI"]["API_VERSION"]))
         headers = {'Content-Type': 'application/json',
-                   'api-key':(self.config['LLM_AI']['ACCESS_TOKEN'])}
+                   'api-key':(os.environ['LLM_ACCESS_TOKEN'])}
         payload = {'messages': conversation}
         response = requests.post(url,json=payload,headers=headers)
 
