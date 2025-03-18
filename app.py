@@ -17,8 +17,8 @@ def main():
     redis1 = redis.Redis(host=(os.environ['REDIS_HOST'])
                          , port=(os.environ['REDIS_PORT'])
                          , password=(os.environ['REDIS_PASSWORD'])
-                         , decode_responses=(config['REDIS']['DECODE_RESPONSE'])
-                         , username=(config['REDIS']['USER_NAME']))
+                         , decode_responses=(os.environ['REDIS_DECODE_RESPONSE'])
+                         , username=(os.environ['REDIS_USER_NAME']))
     global chatgpt
     chatgpt = HKBU_ChatGPT(config)
     chatgpt_handler = MessageHandler(Filters.text & (~Filters.command), equiped_chatgpt)

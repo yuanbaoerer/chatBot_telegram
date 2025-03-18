@@ -3,19 +3,12 @@ import requests
 import os
 
 class HKBU_ChatGPT():
-    def __init__(self,config_='config.ini'):
-        if type(config_) == str:
-            self.config = configparser.ConfigParser()
-            self.config.read(config_)
-        elif type(config_) == configparser.ConfigParser:
-            self.config = config_
-
-    def submit(self,message):
+    def submit(message):
         conversation = [{"role": "user", "content": message}]
         url = ((os.environ['LLM_BASIC_URL'])
-               + "/deployments/" + (self.config["LLM_AI"]["MODEL_NAME"])
+               + "/deployments/" + (os.environ['LLM_MODEL_NAME'])
                + "/chat/completions/?api-version="
-               + (self.config["LLM_AI"]["API_VERSION"]))
+               + (os.environ['LLM_API_VERSION']))
         headers = {'Content-Type': 'application/json',
                    'api-key':(os.environ['LLM_ACCESS_TOKEN'])}
         payload = {'messages': conversation}
