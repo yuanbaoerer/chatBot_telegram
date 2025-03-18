@@ -1,7 +1,6 @@
 from telegram import Update
 from telegram.ext import (Updater, CommandHandler,MessageHandler,Filters,CallbackContext)
 from HKBU_ChatGPT import HKBU_ChatGPT
-import configparser
 import logging
 import redis
 import os
@@ -9,8 +8,6 @@ import os
 global redis1
 def main():
     # Load token and create an Updater for the bot
-    config = configparser.ConfigParser()
-    config.read('config.ini')
     updater = Updater(token=(os.environ['TELE_ACCESS_TOKEN']), use_context=True)
     dispatcher = updater.dispatcher
     global redis1
@@ -20,7 +17,7 @@ def main():
                          , decode_responses=(os.environ['REDIS_DECODE_RESPONSE'])
                          , username=(os.environ['REDIS_USER_NAME']))
     global chatgpt
-    chatgpt = HKBU_ChatGPT(config)
+    chatgpt = HKBU_ChatGPT()
     chatgpt_handler = MessageHandler(Filters.text & (~Filters.command), equiped_chatgpt)
     dispatcher.add_handler(chatgpt_handler)
 
