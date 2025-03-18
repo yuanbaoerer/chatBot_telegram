@@ -3,7 +3,7 @@ import requests
 import os
 
 class HKBU_ChatGPT():
-    def submit(message):
+    def submit(self,message):
         conversation = [{"role": "user", "content": message}]
         url = ((os.environ['LLM_BASIC_URL'])
                + "/deployments/" + (os.environ['LLM_MODEL_NAME'])
