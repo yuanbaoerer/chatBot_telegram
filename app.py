@@ -59,7 +59,7 @@ def is_request_allowed(user_id):
         redis1.zadd(f"rate_limit:{user_id}",{current_time:current_time})
         return True
     else:
-        return False
+        return True
 
 def equiped_chatgpt(update, context):
     user_id = update.message.from_user.id
