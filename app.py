@@ -62,15 +62,21 @@ def is_request_allowed(user_id):
         return True
 
 def equiped_chatgpt(update, context):
-    user_id = update.message.from_user.id
-    if is_request_allowed(user_id):
-        global chatgpt
-        reply_message = chatgpt.submit(update.message.text)
-        logging.info("Update: "+str(update))
-        logging.info("Context: "+str(context))
-        context.bot.send_message(chat_id=update.effective_chat.id, text=reply_message)
-    else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="请求过于频繁，请稍后再试。")
+    # user_id = update.message.from_user.id
+    # if is_request_allowed(user_id):
+    #     global chatgpt
+    #     reply_message = chatgpt.submit(update.message.text)
+    #     logging.info("Update: "+str(update))
+    #     logging.info("Context: "+str(context))
+    #     context.bot.send_message(chat_id=update.effective_chat.id, text=reply_message)
+    # else:
+    #     context.bot.send_message(chat_id=update.effective_chat.id, text="请求过于频繁，请稍后再试。")
+
+    global chatgpt
+    reply_message = chatgpt.submit(update.message.text)
+    logging.info("Update: " + str(update))
+    logging.info("Context: " + str(context))
+    context.bot.send_message(chat_id=update.effective_chat.id, text=reply_message)
 
 def echo(update, context):
     reply_message = update.message.text.upper()
