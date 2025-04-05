@@ -1,0 +1,15 @@
+version: '3'
+services:
+  chatbot:
+    image: chatbot_telegrem-chatbot:latest
+    environment:
+      - TELE_ACCESS_TOKEN=7742600615:AAGyw6sKWtwkGasBwQLyG7pZKMRYB51zEBI
+      - REDIS_HOST=redis-10223.crce178.ap-east-1-1.ec2.redns.redis-cloud.com
+      - REDIS_PASSWORD=pvSmEnD23qCB3zMTpicyTpnsKQQobu82
+      - REDIS_PORT=10223
+      - REDIS_DECODE_RESPONSE=true
+      - REDIS_USER_NAME=default
+      - LLM_BASIC_URL=https://genai.hkbu.edu.hk/general/rest
+      - LLM_MODEL_NAME=gpt-4-o-mini
+      - LLM_API_VERSION=2024-05-01-preview
+      - LLM_ACCESS_TOKEN=b2d166f0-cb72-433e-b627-ea26451a45fd

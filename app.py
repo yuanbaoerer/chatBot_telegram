@@ -1,9 +1,15 @@
+import time
+
 from telegram import Update
 from telegram.ext import (Updater, CommandHandler,MessageHandler,Filters,CallbackContext)
 from HKBU_ChatGPT import HKBU_ChatGPT
 import logging
 import redis
 import os
+
+# 定义时间窗口（秒）和请求阈值
+WINDOW_SIZE = 60
+REQUEST_THRESHOLD = 5
 
 global redis1
 def main():
@@ -16,6 +22,7 @@ def main():
                          , password=(os.environ['REDIS_PASSWORD'])
                          , decode_responses=(os.environ['REDIS_DECODE_RESPONSE'])
                          , username=(os.environ['REDIS_USER_NAME']))
+
     global chatgpt
     chatgpt = HKBU_ChatGPT()
     chatgpt_handler = MessageHandler(Filters.text & (~Filters.command), equiped_chatgpt)
@@ -35,12 +42,36 @@ def main():
     updater.start_polling()
     updater.idle()
 
+def is_request_allowed(user_id):
+    '''
+    检查用户的请求是否允许
+    :param user_id:
+    :return:
+    '''
+    current_time = time.time()
+    window_start = current_time - WINDOW_SIZE
+    # 移除时间窗口之外的请求记录
+    redis1.zremrangebyscan(f"rate_limit:{user_id}",0,window_start)
+    # 统计当前时间窗口内的请求次数
+    request_count = redis1.zcard(f"rate_limit:{user_id}")
+    if request_count < REQUEST_THRESHOLD:
+        # 记录当前请求时间
+        redis1.zadd(f"rate_limit:{user_id}",{current_time:current_time})
+        return True
+    else:
+        return False
+
 def equiped_chatgpt(update, context):
-    global chatgpt
-    reply_message = chatgpt.submit(update.message.text)
-    logging.info("Update: "+str(update))
-    logging.info("Context: "+str(context))
-    context.bot.send_message(chat_id=update.effective_chat.id, text=reply_message)
+    user_id = update.message.from_user.id
+    if is_request_allowed(user_id):
+        global chatgpt
+        reply_message = chatgpt.submit(update.message.text)
+        logging.info("Update: "+str(update))
+        logging.info("Context: "+str(context))
+        context.bot.send_message(chat_id=update.effective_chat.id, text=reply_message)
+    else:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="请求过于频繁，请稍后再试。")
+
 def echo(update, context):
     reply_message = update.message.text.upper()
     logging.info("Update: "+str(update))
