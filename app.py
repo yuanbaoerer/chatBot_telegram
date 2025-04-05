@@ -80,8 +80,9 @@ def echo(update, context):
 
 def hello_command(update:Update, context:CallbackContext) -> None:
     try:
+        user_id = update.message.from_user.id
         name = context.args[0]
-        update.message.reply_text(f'Good day, {name}!')
+        update.message.reply_text(f'Good day, {user_id}!')
     except IndexError:
         update.message.reply_text('Usage: /hello <name>')
 
