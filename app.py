@@ -51,7 +51,7 @@ def is_request_allowed(user_id):
     current_time = time.time()
     window_start = current_time - WINDOW_SIZE
     # 移除时间窗口之外的请求记录
-    redis1.zremrangebyscan(f"rate_limit:{user_id}",0,window_start)
+    redis1.zremrangebyscore(f"rate_limit:{user_id}",0,window_start)
     # 统计当前时间窗口内的请求次数
     request_count = redis1.zcard(f"rate_limit:{user_id}")
     if request_count < REQUEST_THRESHOLD:
