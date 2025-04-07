@@ -2,9 +2,19 @@ import configparser
 import requests
 import os
 
+SYSTEM_PROMPT = """
+You are a professional virtual event assistant specializing in helping 
+users discover and participate in online games, VR experiences, and 
+interest group events.Prioritize event recommendations, participation steps, and community 
+engagement tips.
+"""
 class HKBU_ChatGPT():
+    def __init__(self):
+        self.system_prompt = SYSTEM_PROMPT
     def submit(self,message):
-        conversation = [{"role": "user", "content": message}]
+        conversation = [
+            {"role":"system","content":self.system_prompt},
+            {"role": "user", "content": message}]
         url = ((os.environ['LLM_BASIC_URL'])
                + "/deployments/" + (os.environ['LLM_MODEL_NAME'])
                + "/chat/completions/?api-version="

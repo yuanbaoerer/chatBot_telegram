@@ -9,7 +9,7 @@ import os
 
 # 定义时间窗口（秒）和请求阈值
 WINDOW_SIZE = 60
-REQUEST_THRESHOLD = 5
+REQUEST_THRESHOLD = 2
 
 global redis1
 def main():
@@ -59,24 +59,17 @@ def is_request_allowed(user_id):
         redis1.zadd(f"rate_limit:{user_id}",{current_time:current_time})
         return True
     else:
-        return True
+        return False
 
 def equiped_chatgpt(update, context):
-    # user_id = update.message.from_user.id
-    # if is_request_allowed(user_id):
-    #     global chatgpt
-    #     reply_message = chatgpt.submit(update.message.text)
-    #     logging.info("Update: "+str(update))
-    #     logging.info("Context: "+str(context))
-    #     context.bot.send_message(chat_id=update.effective_chat.id, text=reply_message)
-    # else:
-    #     context.bot.send_message(chat_id=update.effective_chat.id, text="请求过于频繁，请稍后再试。")
-
-    global chatgpt
-    reply_message = chatgpt.submit(update.message.text)
-    logging.info("Update: " + str(update))
-    logging.info("Context: " + str(context))
-    context.bot.send_message(chat_id=update.effective_chat.id, text=reply_message)
+    user_id = update.message.from_user.id
+    if is_request_allowed(user_id):
+        reply_message = chatgpt.submit(update.message.text)
+        logging.info("Update: "+str(update))
+        logging.info("Context: "+str(context))
+        context.bot.send_message(chat_id=update.effective_chat.id, text=reply_message)
+    else:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="请求过于频繁，请稍后再试。")
 
 def echo(update, context):
     reply_message = update.message.text.upper()
