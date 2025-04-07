@@ -20,8 +20,7 @@ def main():
     redis1 = redis.Redis(host=(os.environ['REDIS_HOST'])
                          , port=(os.environ['REDIS_PORT'])
                          , password=(os.environ['REDIS_PASSWORD'])
-                         , decode_responses=(os.environ['REDIS_DECODE_RESPONSE'])
-                         , username=(os.environ['REDIS_USER_NAME']))
+                         , decode_responses=(os.environ['REDIS_DECODE_RESPONSE']))
 
     global chatgpt
     chatgpt = HKBU_ChatGPT()
